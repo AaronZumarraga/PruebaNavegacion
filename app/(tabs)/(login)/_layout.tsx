@@ -13,7 +13,7 @@ export default function HomeLayout() {
         },
       }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="details" />
+      <Stack.Screen name="details" /> //este diseño aplica para todos lo que este dentro de Login
     </Stack>
   );
 }
