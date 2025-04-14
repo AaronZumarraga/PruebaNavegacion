@@ -1,33 +1,51 @@
-import { Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
-import auth  from '@/firebaseConfig'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import auth from '@/firebaseConfig'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { router } from 'expo-router'
-
 
 const index = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(true); // Estado para manejar la carga inicial
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace('/(tabs)/(login)/usuario'); // Redirige a la pantalla de usuario si ya está autenticado
+      } else {
+        setLoading(false); // Deja de mostrar el indicador de carga si no hay usuario
+      }
+    });
+    return unsubscribe; // Limpia el listener al desmontar el componente
+  }, []);
 
   const signIn = async () => {
     try {
-      const user = await signInWithEmailAndPassword(auth, email, password)
-      if (user) router.replace('/(tabs)/(home)');
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      if (user) router.replace('/(tabs)/(login)/usuario');
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       alert('Sign in failed: ' + error.message);
     }
-  }
+  };
 
   const signUp = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password)
-      if (user) router.replace('/(tabs)/(home)');
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      if (user) router.replace('/(tabs)/(login)/usuario');
     } catch (error: any) {
-      console.log(error)
-      alert('Sign in failed: ' + error.message);
+      console.log(error);
+      alert('Sign up failed: ' + error.message);
     }
+  };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color="#5C6BC0" />
+      </SafeAreaView>
+    );
   }
 
   return (
