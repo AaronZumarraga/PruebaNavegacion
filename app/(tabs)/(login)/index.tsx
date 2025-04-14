@@ -8,12 +8,15 @@ const index = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true); // Estado para manejar la carga inicial
+  const [userEmail, setUserEmail] = useState<string | null>(null); // Estado para almacenar el email del usuario
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        setUserEmail(user.email); // Guarda el email del usuario autenticado
         router.replace('/(tabs)/(login)/usuario'); // Redirige a la pantalla de usuario si ya está autenticado
       } else {
+        setUserEmail(null); // Limpia el email si no hay usuario
         setLoading(false); // Deja de mostrar el indicador de carga si no hay usuario
       }
     });
