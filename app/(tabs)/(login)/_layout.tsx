@@ -13,7 +13,9 @@ export default function HomeLayout() {
         },
       }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="details" /> //este diseño aplica para todos lo que este dentro de Login
+      <Stack.Screen name="registro" />
+      <Stack.Screen name="reset-password" />
+      <Stack.Screen name="usuario" />
     </Stack>
   );
 }

@@ -5,7 +5,7 @@ export default function TabLayout() {
     <Tabs>
       <Tabs.Screen name="(home)" />
       <Tabs.Screen name="(search)" />
-      <Tabs.Screen name="settings" /> //este diseño aplica para todos los tabs
+      <Tabs.Screen name="(login)" /> //este diseño aplica para todos los tabs
     </Tabs>
   );
 }
