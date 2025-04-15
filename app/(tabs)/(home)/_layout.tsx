@@ -12,8 +12,8 @@ export default function HomeLayout() {
           fontWeight: 'bold',
         },
       }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="details" /> //este diseño aplica para todos lo que este dentro de home
+      <Stack.Screen name="index" options={{ title: 'Inicio' }}/>
+      <Stack.Screen name="details" options={{ title: 'Detalles' }}/> //este diseño aplica para todos lo que este dentro de home
     </Stack>
   );
 }
