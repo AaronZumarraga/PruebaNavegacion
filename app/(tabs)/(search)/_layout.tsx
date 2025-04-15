@@ -13,7 +13,8 @@ export default function HomeLayout() {
         },
       }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="details" /> //este diseño aplica para todos lo que este dentro de search
+      <Stack.Screen name="details" />
+      <Stack.Screen name="menu/[id]" /> {/* Ruta dinámica para los menús */}
     </Stack>
   );
 }
