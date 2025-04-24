@@ -23,6 +23,7 @@ export default function HomeScreen() {
       <Text>Inicio</Text>
       {userEmail && <Text>Bienvenido, {userEmail}</Text>} {/* Muestra el email si está disponible */}
       <Link href="/details">Pagina de detalles de la pagina de inicio - Navegacion Stack</Link>
+      <Link href="/details2">Pagina de detalles 2 de la pagina de inicio - Navegacion Stack</Link>
     </View>
   );
 }

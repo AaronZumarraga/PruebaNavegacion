@@ -14,6 +14,7 @@ export default function HomeLayout() {
       }}>
       <Stack.Screen name="index" options={{ title: 'Inicio' }}/>
       <Stack.Screen name="details" options={{ title: 'Detalles' }}/> //este diseño aplica para todos lo que este dentro de home
+      <Stack.Screen name="details2" options={{ title: 'Detalles2' }}/> //este diseño aplica para todos lo que este dentro de home
     </Stack>
   );
 }
