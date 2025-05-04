@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { GLView } from 'expo-gl';
+import * as THREE from 'three';
 
 export default function App() {
   return (
@@ -10,70 +11,37 @@ export default function App() {
   );
 }
 
-interface GLContext {
-  viewport: (x: number, y: number, width: number, height: number) => void;
-  clearColor: (r: number, g: number, b: number, a: number) => void;
-  createShader: (type: number) => WebGLShader | null;
-  shaderSource: (shader: WebGLShader, source: string) => void;
-  compileShader: (shader: WebGLShader) => void;
-  createProgram: () => WebGLProgram | null;
-  attachShader: (program: WebGLProgram, shader: WebGLShader) => void;
-  linkProgram: (program: WebGLProgram) => void;
-  useProgram: (program: WebGLProgram) => void;
-  clear: (mask: number) => void;
-  drawArrays: (mode: number, first: number, count: number) => void;
-  flush: () => void;
-  endFrameEXP: () => void;
-  VERTEX_SHADER: number;
-  FRAGMENT_SHADER: number;
-  COLOR_BUFFER_BIT: number;
-  POINTS: number;
-  drawingBufferWidth: number;
-  drawingBufferHeight: number;
-}
+import { ExpoWebGLRenderingContext } from 'expo-gl';
 
-function onContextCreate(gl: GLContext) {
-  gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-  gl.clearColor(0, 1, 1, 1);
+function onContextCreate(gl: ExpoWebGLRenderingContext) {
+  const renderer = new THREE.WebGLRenderer({ context: gl });
+  renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
+  renderer.setClearColor(0x000000, 1);
 
-  // Create vertex shader (shape & position)
-  const vert = gl.createShader(gl.VERTEX_SHADER);
-  if (!vert) throw new Error("Failed to create vertex shader");
-  gl.shaderSource(
-    vert,
-    `
-    void main(void) {
-      gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-      gl_PointSize = 150.0;
-    }
-  `
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    gl.drawingBufferWidth / gl.drawingBufferHeight,
+    0.1,
+    1000
   );
-  gl.compileShader(vert);
+  camera.position.z = 2;
 
-  // Create fragment shader (color)
-  const frag = gl.createShader(gl.FRAGMENT_SHADER);
-  if (!frag) throw new Error("Failed to create fragment shader");
-  gl.shaderSource(
-    frag,
-    `
-    void main(void) {
-      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    }
-  `
-  );
-  gl.compileShader(frag);
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
 
-  // Link together into a program
-  const program = gl.createProgram();
-  if (!program) throw new Error("Failed to create program");
-  gl.attachShader(program, vert);
-  gl.attachShader(program, frag);
-  gl.linkProgram(program);
-  gl.useProgram(program);
+  const animate = () => {
+    requestAnimationFrame(animate);
 
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.drawArrays(gl.POINTS, 0, 1);
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+    (gl as ExpoWebGLRenderingContext).endFrameEXP();
+    renderer.render(scene, camera);
+    gl.endFrameEXP();
+  };
 
-  gl.flush();
-  gl.endFrameEXP();
+  animate();
 }
